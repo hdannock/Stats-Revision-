@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Statistics, chapters 1 to 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter+Tight:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5f2;--grid:#d8e1db;--ink:#1b2a38;--mute:#52636f;--card:#fbfdfb;--acc:#1b6b86;--hi:#b9780f;--line:#c4d0c9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14202a;--grid:#1d2c37;--ink:#e3ece7;--mute:#9bb0ba;--card:#192833;--acc:#5fbfdc;--hi:#e0a64a;--line:#2f4352}}
+:root[data-theme="dark"]{--bg:#14202a;--grid:#1d2c37;--ink:#e3ece7;--mute:#9bb0ba;--card:#192833;--acc:#5fbfdc;--hi:#e0a64a;--line:#2f4352}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Spectral,Georgia,serif;
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 20px 64px}
+h1,h2,h3,button,summary{font-family:"Inter Tight",system-ui,sans-serif}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:0 0 12px;letter-spacing:-.02em}
+.lead{max-width:62ch;color:var(--mute);margin:0 0 24px}
+.loop{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px;padding:0;list-style:none;font:500 14px "Inter Tight",sans-serif}
+.loop li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.demo{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:28px}
+.demo h2{font-size:20px;margin:0 0 4px}
+.demo p{margin:0 0 12px;color:var(--mute);font-size:16px}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 24px;margin-bottom:8px;font:500 14px "Inter Tight",sans-serif}
+.ctl input{width:100%;accent-color:var(--acc)}
+svg{width:100%;height:auto;display:block}
+#read{font:500 14px "Inter Tight",sans-serif;color:var(--mute)}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:start}
+nav{display:flex;flex-direction:column;gap:6px;position:sticky;top:12px}
+nav button{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 12px;border-radius:8px;font-size:15px;cursor:pointer}
+nav button[aria-selected="true"]{border-color:var(--acc);box-shadow:inset 4px 0 0 var(--acc);font-weight:700}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px}
+.panel h2{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+.tag{margin:0 0 16px;color:var(--mute);font-style:italic}
+.panel ul{padding-left:20px;margin:0 0 20px}.panel li{margin-bottom:6px}
+.rule{border-left:4px solid var(--hi);padding:6px 14px;margin:0 0 20px;background:color-mix(in srgb,var(--hi) 10%,transparent)}
+details{border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+summary{cursor:pointer;font-weight:500;font-size:16px}
+details p{margin:8px 0 0;color:var(--mute)}
+.nxt{margin-top:16px;display:flex;justify-content:space-between}
+.nxt button{border:1px solid var(--acc);background:transparent;color:var(--acc);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:15px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}nav{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}nav button{white-space:nowrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Statistics for physicists: chapters 1 to 7</h1>
+<p class="lead">Prof. Ackland’s notes (Fourier Analysis and Statistics, PHYS09055). The whole course rests on one idea: data are drawn from a probability distribution that your physical model predicts, and statistics checks whether the data look like a plausible draw.</p>
+<ul class="loop" aria-label="The working loop">
+<li>Model the data</li><li>Predict, exactly or by simulation</li><li>Pick a statistic T(D)</li><li>Compare with simulated T</li><li>Estimate parameters</li><li>State what was fitted</li>
+</ul>
+
+<section class="demo" aria-labelledby="dh">
+<h2 id="dh">Binomial to Gaussian (chapters 3 and 4)</h2>
+<p>Bars are the binomial distribution; the line is the Gaussian with the same mean and variance. Push n up and watch them merge. Keep p tiny and n large to see the Poisson regime.</p>
+<div class="ctl">
+<label>Trials n: <b id="nv">20</b><input id="n" type="range" min="1" max="200" value="20"></label>
+<label>Hit probability p: <b id="pv">0.30</b><input id="p" type="range" min="1" max="99" value="30"></label>
+</div>
+<svg id="plot" viewBox="0 0 640 200" role="img" aria-label="Binomial distribution with Gaussian overlay"></svg>
+<div id="read"></div>
+</section>
+
+<div class="layout">
+<nav role="tablist" aria-label="Chapters" id="tabs"></nav>
+<main id="panel" class="panel" role="tabpanel" tabindex="-1"></main>
+</div>
+</div>
+
+<script>
+const C=[
+{t:"1. Randomness and probability",g:"Unpredictability comes from incomplete knowledge.",
+pts:["A probability density function (PDF) p(x) describes the outcomes: probabilities lie between 0 and 1 and the total sums or integrates to 1.","Variables can be discrete or continuous. Probabilities are dimensionless, but a density has units and must be integrated over a range.","Summaries of a distribution: mean, median and mode for the centre; percentiles and width for the spread.","Combining events: it matters whether they are independent, dependent or correlated. For independent events P(A and B) = P(A)P(B); in general P(A or B) = P(A) + P(B) − P(A and B).","The same mathematics has three meanings: long-run frequency, degree of belief, and the distribution of measurement errors."],
+r:"Total probability = ∫ p(x) dx = 1",q:"Can a probability density be greater than 1?",a:"Yes. Only the integral over a range is a probability. A narrow distribution has a tall peak, and its density carries units of 1/x."},
+{t:"2. Distributions, moments, errors",g:"Parent distributions versus the samples we actually draw.",
+pts:["The parent (population) distribution is the model; a sample is a finite draw from it. By the law of large numbers the sample distribution approaches the parent as trials increase.","Spread of the parent (standard deviation) is different from confidence in the mean (standard error σ/√N).","Moments are expectation values of xⁿ; the third and fourth give skewness and kurtosis. The sample variance is biased unless you divide by N − 1.","Independent variances add when you add variables, which is the basis of error propagation. Correlation (covariance, Pearson coefficient) changes this, and Simpson’s paradox shows how pooled data can mislead.","Combinatorics: permutations and combinations lead to microstates and macrostates, and entropy S = k ln W."],
+r:"σ²(x + y) = σ²(x) + σ²(y) for independent x, y",q:"Two independent errors of 3 and 4 units are added. What is the combined error?",a:"5 units. Variances add: 9 + 16 = 25, so σ = 5. Standard deviations do not add directly."},
+{t:"3. Counting: binomial and Poisson",g:"Yes/no trials, and the rare-event limit.",
+pts:["The binomial model is n independent yes/no trials with hit probability p. P(r) = C(n,r) pʳ (1−p)ⁿ⁻ʳ, mean np, variance np(1−p). Middle outcomes are far likelier than extremes because there are more ways to reach them.","The geometric and negative binomial distributions are the waiting-time versions, and the hypergeometric is the without-replacement counterpart.","The Poisson distribution is the rare-event limit of the binomial. It is fixed by one number: mean μ equals variance μ.","Relative error on a count falls as 1/√N. Shot-noise processes give exponentially distributed waiting times."],
+r:"Poisson: mean = variance = μ, so error on N counts is √N",q:"You record 400 counts from a Poisson source. What is the uncertainty and relative error?",a:"√400 = 20 counts, a 5% relative error. To halve the relative error you need four times the counts."},
+{t:"4. The normal distribution",g:"Why the Gaussian is everywhere.",
+pts:["Use the standard form (µ = 0, σ = 1) and the cumulative distribution to find probabilities within regions of the curve.","Origin: many small independent factors combined. Adding random variables convolves their PDFs, and the Gaussian is the fixed point of convolution, which is the central limit theorem.","The convolution of two Gaussians is a broader Gaussian. Gaussians in disguise: Maxwell–Boltzmann speeds (a radial form of a 3D Gaussian, not itself Gaussian) and the lognormal.","The error on the mean σ/√N is itself roughly Gaussian.","Random walks: a 1D walk is binomial, tending to Gaussian, and diffusion distance grows as √time."],
+r:"Central limit theorem: sums of many independent variables tend to a Gaussian",q:"A walker takes steps of random sign. How does typical distance change when you wait four times as long?",a:"It doubles. Spread goes as √N, which is why diffusion distance scales with the square root of time."},
+{t:"5. Fat tails",g:"Where standard statistics fails.",
+pts:["Means, variances and CLT error bars assume the moments exist. Heavy tails break that assumption.","The Cauchy (Lorentzian) distribution has a clear peak but no mean and infinite variance. The sample mean never settles down.","Convolving Lorentzians gives another Lorentzian (widths add), so the CLT does not apply. The Voigt profile mixes Lorentzian and Gaussian broadening.","A pure power law cannot be normalised; real systems supply cutoffs (quanta at the small end, system size at the large end). The ultraviolet catastrophe is the historical example, and Zipf’s law is cut off at both ends.","The lognormal is the great impostor of power laws. Power laws arise from inverse quantities, growth and death, multiplicative noise and preferential attachment."],
+r:"Lorentzian: peak 2/(πΓ), FWHM Γ, variance infinite",q:"Why does averaging more Cauchy measurements not shrink the error?",a:"The average of N Cauchy samples is Cauchy with the same width. With no finite variance, the 1/√N argument never gets started."},
+{t:"6. Model testing",g:"Is the data a plausible realisation of the model?",
+pts:["Check the model directly by simulating synthetic datasets and comparing a test statistic. Decide the test before looking at the data.","Set up a null hypothesis. The p-value is the probability of data at least this extreme if the null were true. Decide one-tailed versus two-tailed up front (the lady tasting tea shows how design matters).","Frequentists ask how often such data arise from the model. Bayesians update credibility: posterior ∝ prior × likelihood, then normalise.","False positives and negatives: screening for rare events can produce mostly false alarms.","Pitfalls: p-hacking (use a Bonferroni correction), rejecting a null does not make your interesting model 95% likely, the wrong or non-Gaussian assumption, noise, correlations and offsets."],
+r:"Posterior P₂(H) ∝ P(D|H) × prior P₁(H)",q:"You run 20 independent tests, each at the 5% level, on pure noise. How likely is at least one false positive?",a:"About 64%: 1 − 0.95²⁰. This is why you need a Bonferroni correction or a pre-stated test."},
+{t:"7. Formal tests",g:"The standard toolkit, and when to reach for each tool.",
+pts:["z-test: a quick significance estimate when the variance is known. t-test: handles small samples with unknown variance; the paired t-test works on differences of repeated measurements.","Mann–Whitney U and Wilcoxon signed-rank are rank-based, non-parametric alternatives.","χ² test: independence, goodness of fit and curve fitting. Degrees of freedom ν are data points minus fitted parameters, and reduced χ² near 1 is a good fit. Fisher’s exact test suits small contingency tables, and odds ratios measure association strength.","Comparing distributions: KS, Anderson–Darling and Cramér–von Mises; F-test and ANOVA compare variances and group means.","Permutation test: reshuffle labels to build the null distribution. Easy on a computer and robust to outliers."],
+r:"Reduced χ² = χ²/ν ≈ 1 for a good fit",q:"Trained group: 25, 26, 28, 32, 178 press-ups. Untrained: 23, 26, 29, 31, 36. Is training working?",a:"Not demonstrably. The outlier 178 drives the mean difference, and a permutation test gives p ≈ 0.25, which is unremarkable."}
+];
+const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');let cur=0;
+C.forEach((c,i)=>{const b=document.createElement('button');b.role='tab';b.textContent=c.t;b.onclick=()=>show(i);tabs.appendChild(b)});
+function show(i){cur=i;const c=C[i];
+[...tabs.children].forEach((b,j)=>b.setAttribute('aria-selected',j===i));
+panel.innerHTML=`<h2>${c.t}</h2><p class="tag">${c.g}</p><ul>${c.pts.map(x=>`<li>${x}</li>`).join('')}</ul><div class="rule">${c.r}</div><details><summary>${c.q}</summary><p>${c.a}</p></details><div class="nxt"><button ${i?'':'disabled style="opacity:.4"'} onclick="show(${i-1})">Previous</button><button ${i<6?'':'disabled style="opacity:.4"'} onclick="show(${i+1})">Next</button></div>`}
+show(0);
+const n=document.getElementById('n'),p=document.getElementById('p'),svg=document.getElementById('plot');
+function draw(){const N=+n.value,P=p.value/100,mu=N*P,sg=Math.sqrt(N*P*(1-P));
+document.getElementById('nv').textContent=N;document.getElementById('pv').textContent=P.toFixed(2);
+const pm=[];let lp=N*Math.log(1-P);pm[0]=Math.exp(lp);for(let r=1;r<=N;r++){lp+=Math.log((N-r+1)/r)+Math.log(P/(1-P));pm[r]=Math.exp(lp)}
+const gp=x=>Math.exp(-0.5*((x-mu)/sg)**2)/(sg*Math.sqrt(2*Math.PI));
+const lo=Math.max(0,Math.floor(mu-5*sg)),hi=Math.min(N,Math.ceil(mu+5*sg));
+let mx=0;for(let r=lo;r<=hi;r++)mx=Math.max(mx,pm[r],gp(r));
+const W=640,H=200,m=24,bw=(W-2*m)/(hi-lo+1),y=v=>H-20-(v/mx)*(H-40);
+let s='';for(let r=lo;r<=hi;r++)s+=`<rect x="${m+(r-lo)*bw+1}" y="${y(pm[r])}" width="${Math.max(bw-2,1)}" height="${H-20-y(pm[r])}" fill="var(--acc)" opacity=".55"/>`;
+let d='';for(let r=lo;r<=hi;r++){d+=(r==lo?'M':'L')+(m+(r-lo+.5)*bw)+' '+y(gp(r))}
+s+=`<path d="${d}" fill="none" stroke="var(--hi)" stroke-width="2.5"/><line x1="${m}" x2="${W-m}" y1="${H-20}" y2="${H-20}" stroke="var(--mute)"/>`;
+s+=`<text x="${m}" y="${H-4}" font-size="12" fill="var(--mute)">${lo}</text><text x="${W-m}" y="${H-4}" font-size="12" text-anchor="end" fill="var(--mute)">${hi}</text>`;
+svg.innerHTML=s;
+document.getElementById('read').textContent=`mean np = ${mu.toFixed(1)}, σ = ${sg.toFixed(2)}`+(P<=.05&&N>=50?' · rare events, close to Poisson (variance ≈ mean)':'')+(sg<1.5?' · too narrow for a good Gaussian match':'')}
+n.oninput=p.oninput=draw;draw();
+</script>
+</body>
+</html>
