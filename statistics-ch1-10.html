@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Statistics, chapters 1 to 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter+Tight:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5f2;--grid:#d8e1db;--ink:#1b2a38;--mute:#52636f;--card:#fbfdfb;--acc:#1b6b86;--hi:#b9780f;--line:#c4d0c9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14202a;--grid:#1d2c37;--ink:#e3ece7;--mute:#9bb0ba;--card:#192833;--acc:#5fbfdc;--hi:#e0a64a;--line:#2f4352}}
+:root[data-theme="dark"]{--bg:#14202a;--grid:#1d2c37;--ink:#e3ece7;--mute:#9bb0ba;--card:#192833;--acc:#5fbfdc;--hi:#e0a64a;--line:#2f4352}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Spectral,Georgia,serif;
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 20px 64px}
+h1,h2,h3,button,summary{font-family:"Inter Tight",system-ui,sans-serif}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:0 0 12px;letter-spacing:-.02em}
+.lead{max-width:62ch;color:var(--mute);margin:0 0 24px}
+.loop{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px;padding:0;list-style:none;font:500 14px "Inter Tight",sans-serif}
+.loop li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.demo{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:28px}
+.demo h2{font-size:20px;margin:0 0 4px}
+.demo p{margin:0 0 12px;color:var(--mute);font-size:16px}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 24px;margin-bottom:8px;font:500 14px "Inter Tight",sans-serif}
+.ctl input{width:100%;accent-color:var(--acc)}
+svg{width:100%;height:auto;display:block}
+#read{font:500 14px "Inter Tight",sans-serif;color:var(--mute)}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:start}
+nav{display:flex;flex-direction:column;gap:6px;position:sticky;top:12px}
+nav button{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 12px;border-radius:8px;font-size:15px;cursor:pointer}
+nav button[aria-selected="true"]{border-color:var(--acc);box-shadow:inset 4px 0 0 var(--acc);font-weight:700}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px}
+.panel h2{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+.tag{margin:0 0 16px;color:var(--mute);font-style:italic}
+.panel ul{padding-left:20px;margin:0 0 20px}.panel li{margin-bottom:6px}
+.rule{border-left:4px solid var(--hi);padding:6px 14px;margin:0 0 20px;background:color-mix(in srgb,var(--hi) 10%,transparent)}
+details{border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+summary{cursor:pointer;font-weight:500;font-size:16px}
+details p{margin:8px 0 0;color:var(--mute)}
+.nxt{margin-top:16px;display:flex;justify-content:space-between}
+.nxt button{border:1px solid var(--acc);background:transparent;color:var(--acc);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:15px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}nav{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}nav button{white-space:nowrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Statistics for physicists: chapters 1 to 10</h1>
+<p class="lead">Prof. Ackland’s notes (Fourier Analysis and Statistics, PHYS09055). The whole course rests on one idea: data are drawn from a probability distribution that your physical model predicts, and statistics checks whether the data look like a plausible draw.</p>
+<ul class="loop" aria-label="The working loop">
+<li>Model the data</li><li>Predict, exactly or by simulation</li><li>Pick a statistic T(D)</li><li>Compare with simulated T</li><li>Estimate parameters</li><li>State what was fitted</li>
+</ul>
+
+<section class="demo" aria-labelledby="dh">
+<h2 id="dh">Binomial to Gaussian (chapters 3 and 4)</h2>
+<p>Bars are the binomial distribution; the line is the Gaussian with the same mean and variance. Push n up and watch them merge. Keep p tiny and n large to see the Poisson regime.</p>
+<div class="ctl">
+<label>Trials n: <b id="nv">20</b><input id="n" type="range" min="1" max="200" value="20"></label>
+<label>Hit probability p: <b id="pv">0.30</b><input id="p" type="range" min="1" max="99" value="30"></label>
+</div>
+<svg id="plot" viewBox="0 0 640 200" role="img" aria-label="Binomial distribution with Gaussian overlay"></svg>
+<div id="read"></div>
+</section>
+
+<div class="layout">
+<nav role="tablist" aria-label="Chapters" id="tabs"></nav>
+<main id="panel" class="panel" role="tabpanel" tabindex="-1"></main>
+</div>
+</div>
+
+<script>
+const C=[
+{t:"1. Randomness and probability",g:"Unpredictability comes from incomplete knowledge, large numbers, chaos, outside effects, quantum mechanics and the Second Law.",
+pts:["A PDF p(x) is a model that assigns probability to possible data; a histogram only estimates it. Discrete PDFs sum to 1, continuous ones integrate to 1, and the CDF accumulates them.","Probabilities are dimensionless, but a density has units (per unit x), so it must be integrated over a range.","Averages: mean, median (robust but awkward to work with) and mode (sensitive to binning). Variance is the mean of the square minus the square of the mean. When variance is infinite, use the interquartile range or FWHM.","Independent: P(B|A) = P(B). Dependent: knowing A changes B. Correlated: B drifts systematically with A. Two balls drawn without replacement are dependent but not correlated.","P(A,B) = P(A)P(B|A) and Bayes’ theorem follows. “Or” means either or both, so P(A or B) = P(A) + P(B) − P(A,B). Two dice give 4/36 for a total of 9, so fair odds are 8:1.","The same maths has three meanings: frequency, credibility of a hypothesis, and the error PDF on a measurement. Error is the unknown actual difference; uncertainty is our estimate of it (±1σ covers 68%)."],
+r:"P(A or B) = P(A) + P(B) − P(A,B)",q:"An urn holds 2 red and 8 black balls. What is the chance of two reds with and without replacement?",a:"With replacement: 1/5 × 1/5 = 1/25. Without: 1/5 × 1/9 = 1/45, because the first draw changes the second."},
+{t:"2. Distributions, moments, errors",g:"Parent versus sample, how errors combine, and counting arrangements.",
+pts:["Parent (population) distribution is the model; the sample is a finite draw. Their difference is sampling error, and the law of large numbers closes the gap. Binned sample PDF: p_b = n_b/(NΔx).","Two meanings of σ: the spread of the distribution (does not shrink) and the standard error on the mean σ/√N. If you learn one thing, learn that error goes as the square root of the amount of data.","Moments are E[xⁿ]. Skewness is μ₃/σ³ and kurtosis μ₄/σ⁴ (Gaussian = 3, so excess kurtosis = kurtosis − 3). The plain sample variance is biased low by (N−1)/N, so divide by N−1.","For sums, σ²(x+y) = σx² + σy² + 2σxy. Perfect anticorrelation cancels (noise-cancelling headphones); for products the variance picks up extra mean terms. ⟨½mv²⟩ is not ½m⟨v⟩².","Simpson’s paradox: Berkeley 1973 admitted 44.5% of men and 30.4% of women overall, yet within departments the rates were comparable. Pooling subgroups with different mixes reversed the sign.","Combinatorics: nPr = n!/(n−r)!, nCr = n!/(r!(n−r)!), Stirling ln n! ≈ n ln n − n. W = n!/(n₁!n₂!…) counts microstates of a macrostate, and entropy is k ln W. Four particles in two halves: W = 6 for (2,2), 1 for (4,0).","Transforming variables preserves probability: p_z = p_x |dx/dz|. Even the tote shows sample versus parent: small pools misprice horses."],
+r:"σ_mean = σ/√N, and variances (not standard deviations) add",q:"A pond measures 36 in × 24 in, each with ±1 in error. What is the area and its error?",a:"The area is 864 in². The formula gives σz² = 1×1 + 36²×1 + 24²×1 = 1873, so σz ≈ 43 in². The notes print ±53, which looks like an arithmetic slip, so check it against your own copy."},
+{t:"3. Counting: binomial and Poisson",g:"Yes/no trials, waiting times, and the rare-event limit.",
+pts:["Binomial: n independent trials with hit probability p. P(r) = C(n,r) pʳ(1−p)ⁿ⁻ʳ, mean np, variance np(1−p), relative width ∝ 1/√n. Middle outcomes dominate because there are more ways to reach them.","Same yes/no model, other questions: geometric (trials to first success, mean 1/p, variance (1−p)/p²), negative binomial (r-th success), hypergeometric (without replacement), multinomial (k outcomes).","Poisson is the p → 0, n → ∞ limit with μ = np fixed: P(r) = μʳe^(−μ)/r!. One parameter, and mean = variance = μ.","For N counts the error is √N, so relative error is 1/√N: 1 ± 1 count is 100%, 1,218 counts is about 3%. The rule is poor for small N because the distribution is asymmetric.","Check the sample size before assuming Poisson. Vanilla ice cream chosen by 25 of a cafe’s customers: if p = 1/2 the spread is √(N/2); if p is small across a whole town, it is √N.","Poisson process (shot noise): rate λ gives Poisson counts per bin and exponential waiting times f(t) = λe^(−λt), with no memory of how long you have waited."],
+r:"Poisson: μ = σ², so the error on N counts is √N",q:"You record 400 counts from a Poisson source. What are the uncertainty and relative error?",a:"√400 = 20 counts, a 5% relative error. To halve it you need four times the counts."},
+{t:"4. The normal distribution",g:"Why the Gaussian is everywhere, and where it stops applying.",
+pts:["Standard form z = (x−μ)/σ. Within ±1σ, 2σ and 3σ you find 68.3%, 95.4% and 99.7%. FWHM = 2.355σ. Five sigma for discovery depends on how many hypotheses you looked at (look-elsewhere).","Origin: many small independent effects combine. Adding variables convolves their PDFs; a Gaussian convolved with a Gaussian is a Gaussian with μ = μ₁ + μ₂ and σ² = σ₁² + σ₂².","Add, convolve or shift: separate sources add PDFs, two effects in one value convolve, and sidebands add shifted copies.","The CLT applies to sums and means, needs enough samples, and fails when the mean is undefined (Lorentzian). Misusing it gives overconfidence and underestimated large fluctuations.","Gaussians in disguise: Maxwell–Boltzmann is the radial form of a 3D Gaussian; the lognormal comes from multiplying many factors, so ln x is Gaussian.","Errors on histogram bins can be Poisson, theory-based, estimated from noise, or propagated.","Random walks: displacement σ = a√n (binomial → Gaussian), diffusion distance ∝ √t. A walk returns infinitely often in 1D and 2D, but in 3D a return is not inevitable."],
+r:"p(z) = (1/√2π) e^(−z²/2), error on mean = σ/√N",q:"Will a random walker eventually return to its start?",a:"In 1D and 2D, yes: the number of returns diverges. In 3D the sum converges, so returns are possible but not inevitable."},
+{t:"5. Fat tails",g:"Where means, variances and the CLT break down.",
+pts:["Cauchy/Lorentzian f(x) = (1/π)(Γ/2)/((x−μ)² + (Γ/2)²): a clear peak with no mean and infinite variance. The sample mean never converges, though the median and mode still do, at 1/√N.","Convolving Lorentzians gives a Lorentzian with widths adding (Γ₁ + Γ₂), so the CLT does not apply. A Gaussian convolved with a Lorentzian is a Voigt profile.","Add versus convolve: in Raman scattering each resonance gives its own Voigt (add); only double scattering convolves two Lorentzians.","A pure power law Ax^(−α) cannot be normalised. Physics supplies cutoffs: quanta at the small end and the whole system at the large end. The ultraviolet catastrophe and Zipf’s law (α = 1) are the examples.","The lognormal is the great impostor: nearly straight on a log-log plot over a limited range. Check that moments stabilise, that the line stays straight over decades, and that α does not change with binning.","Power laws arise from inverse quantities (α = 2 for ratios), from growth versus death (α = 1 + T_g/T_e), multiplicative noise (income tails), preferential attachment (p(k) ∝ k⁻³), and gambler’s ruin.","Master equations define the process rather than the PDF (Fokker–Planck, Ito versus Stratonovich)."],
+r:"Lorentzian: peak 2/(πΓ); convolution adds widths; α = 1 + T_g/T_e",q:"Why does averaging more Cauchy measurements not shrink the error on the mean?",a:"The average of N Cauchy samples is Cauchy with the same width. But the median converges at the usual 1/√N rate."},
+{t:"6. Model testing",g:"Is the data a plausible realisation of the model?",
+pts:["Simulate the model, build a test statistic T(D), and compare T(D_obs) with the simulated distribution. Choose the test before looking at the data, and plot the full comparison.","Frequentists use the likelihood P(D|H); Bayesians the credibility P(H|D). Statistics can reject a model but never prove one.","The null hypothesis is the boring model. The p-value is the chance of data at least this extreme, and significance α is chosen in advance. One versus two tails depends on the alternative, and you must state the choice.","Lady tasting tea: Fisher’s eight cups (four each) give 1/70 by chance. Eight heads in ten: P(≥8) = 0.0547, two-tailed 0.109, so a fair coin is not rejected.","Bayes: posterior = prior × likelihood / evidence. Coin HH/TT/HT: one head gives 2/3, 0, 1/3. With a 98% prior on HT, seven heads make HH most credible. Eight in ten with a flat prior gives posterior 495π⁸(1−π)², mean 0.75, mode 0.8, 95% credible interval [0.48, 0.94].","Type I (false positive) and Type II (false negative) errors. Look-elsewhere effect and the Bonferroni correction (use p/n). Screening a rare disease can give more false positives than true ones.","P-value pitfalls: p-hacking, rejecting the null does not make your interesting model 95% likely, wrong or non-Gaussian assumptions, noise, correlated data (effective n), and the offset problem."],
+r:"Posterior P(H|D) = P(D|H) × π(H) / E, with E = Σ π_i L_i",q:"A test has 99% sensitivity and 99% specificity, and 50,000 of 67 million people have the disease. If you test positive, how likely are you ill?",a:"About 7%. The test finds 49,500 true cases but also 670,000 false positives (1% of the healthy), so a positive is mostly a false alarm."},
+{t:"7. Formal tests",g:"The standard toolkit and when to use each tool.",
+pts:["z-test: z = (x̄−μ)/σ_err when the Gaussian width is known. State your assumptions: 8 heads in 10 gives P = 0.055 exactly, but a z-test gives 0.029 or 0.057 depending on the continuity correction.","t-test: width estimated from the sample, ν = N−1, heavier tails. Two samples use t = (x₁−x₂)/√(s₁²/N₁ + s₂²/N₂), Welch if variances differ, and the paired t-test works on differences.","Non-parametric: sign test, Mann–Whitney U (two samples) and Wilcoxon signed-rank (paired) use ranks. They are about 95% as powerful when data are Gaussian and far more robust otherwise.","χ² = Σ(x_i−x_t)²/σ_t². Uses: independence in contingency tables, goodness of fit, curve fits. ν = data minus fitted parameters, mean ν, variance 2ν, and reduced χ² near 1 is good. Too low can mean overestimated errors or fraud.","Neutron example: the z-test rejects (p = 0.011), the t-test barely fails (p = 0.050), the χ² test fails (p = 0.075). Detector table χ² = 5.40, ν = 2, p = 0.067.","Odds ratios measure association: cheese/fruit survey OR = 2.9 with p = 0.11 (strong views, weakly held) versus OR = 1.07 with p = 0.002 (weak views, strongly held). Fisher’s exact test suits small tables.","Compare distributions with KS (largest CDF gap), Cramér–von Mises and Anderson–Darling (tails). The F-test compares reduced χ², and ANOVA compares three or more means (F = t² for two).","Combine datasets by weighted mean: g = 9.83 ± 0.19 from 10 ± 0.5 and 9.8 ± 0.2. Permutation tests reshuffle labels to build the null."],
+r:"χ² = Σ(obs − model)²/σ², reduced χ² = χ²/ν ≈ 1",q:"Trained group: 25, 26, 28, 32, 178 press-ups. Untrained: 23, 26, 29, 31, 36. Does training work?",a:"Not demonstrably. The outlier 178 drives the mean difference; the permutation test gives p ≈ 0.25."},
+{t:"8. Joint distributions and association",g:"Correlation summarises a joint PDF, and it can miss things.",
+pts:["Bivariate data: both variables random (p(x,y)), or x chosen and y random (p(y|x)). Marginals integrate out one variable; conditionals fix one. Independent means p(x,y) = f(x)g(y).","Covariance s_xy = (1/N)Σ(x−x̄)(y−ȳ) detects only linear association. Pearson r = s_xy/(s_x s_y) is dimensionless, between −1 and 1, and measures tightness, not slope.","Dependent does not mean correlated: a ring-shaped PDF or E = ½mv² can have r = 0. Tilted elliptical contours show correlation, and a change of axes can remove it.","Test r with t = r√((N−2)/(1−r²)), ν = N−2, or Fisher’s z = ½ln((1+r)/(1−r)) with variance 1/(N−3). Boyle’s law: P versus V looks strongly linear, but P versus 1/V is the real relation.","Rank correlations are robust: Spearman r_s = 1 − 6Σd²/(N³−N) and Kendall τ from concordant and discordant pairs.","Pitfalls: correlation is not causation or direction (CO₂ and ice ages), r is blind to non-monotonic dependence, and r says nothing about slope."],
+r:"r = s_xy/(s_x s_y); t = r√((N−2)/(1−r²)) with ν = N−2",q:"If r = 0, are x and y independent?",a:"No. r only detects linear (or monotonic) association; a ring-shaped PDF or E = ½mv² can be fully dependent with r = 0."},
+{t:"9. Parameter estimation",g:"Hold the data fixed and vary the parameters.",
+pts:["The likelihood L(θ) = p(D_obs|θ) is the forward PDF evaluated at the observed data, not a PDF in θ. The maximum-likelihood estimate is its peak. For Gaussian errors, maximising ln L is minimising χ², and μ_ML = x̄.","Intervals from Δχ² with one parameter: 68.3% → 1.0, 90% → 2.71, 95% → 3.84, 99% → 6.63. Correlations cancel in Δχ².","Neutron data (N = 6): mean 272.67, 95% t interval 272.67 ± 16.71 = (255.96, 289.37). The interval for σ is 10 to 39, skewed by the χ² distribution. Twice the data narrows the mean to (263.0, 282.3).","Bayesian: posterior = prior × likelihood / evidence. Flat priors, or Jeffreys (uniform in ln T); try two priors to check. The Bayes factor B₁₂ = E₁/E₂ compares models.","Straight line: χ²_min = S_yy(1−r²)/σ², so maximising r² is minimising χ². ν = N−2. A very small χ² (0.28 with ν = 3 in the worked example) is too good to be true: errors overestimated or systematic.","Curvilinear fits are linear in the parameters. Linearise: exponential (ln y vs x), Arrhenius (ln y vs 1/T), power law (log-log). Splines, LOESS and Fourier series are for interpolation.","Dodgy data: sigma-clipping with leave-one-out and a Bonferroni correction, and beware published errors that leave out systematics (election polling)."],
+r:"−2 ln L = χ² + const; χ²_min = S_yy(1−r²)/σ²",q:"A straight-line fit passes through every error bar and χ² is tiny. Good news?",a:"Suspicious. Too-low χ² means errors overestimated, systematic offsets, or chance. The notes’ example has χ² = 0.28 with ν = 3."},
+{t:"10. Model fitting",g:"The best member of a bad family is still a bad model.",
+pts:["Fitting is not model checking. Check with train–test splits, a parametric bootstrap (simulate from the fitted model and refit), or a Bayesian posterior predictive check.","A model maps inputs to outputs and is only trusted in its range of applicability (Ohm’s law cannot give the colour). A peak search over a wide range can drown the signal in null-model data.","Overfitting: six points fit exactly by a fifth-order polynomial have χ² = 0 and no degrees of freedom left, and extrapolate wildly. RMSE always falls as parameters are added, so use held-out data. Regularisation and orthogonal bases help.","Signal versus noise: with B ≫ A the χ² surface has multiple minima, and the χ² minimum stays near the null value, so run synthetic tests first.","Multi-parameter confidence regions need larger Δχ²: for 95%, 3.84 (m=1), 5.99 (m=2, k = 2.45), 7.81 (m=3). Correlated parameters give tilted ellipses.","Model comparison: Δχ² (nested models), F-test, likelihood ratio (2 ln R = Δχ²), and the Bayes factor. The first three are roughly equivalent; Bayes uses priors, useful for overturning an established model.","KDE places a bump on each point; Silverman h = 1.06 s n^(−1/5). Leave-one-out log-likelihood replaces χ². Gaussian versus KDE on six points gave a Bayes factor of 2.69, which is barely worth mentioning.","Machine learning is model fitting judged by prediction (supervised, unsupervised, reinforcement); the notes mark it for interest, not part of the course."],
+r:"2 ln(L₁/L₂) = Δχ² in the Gaussian approximation",q:"Why is RMSE a poor guide to choosing polynomial order?",a:"It always falls as parameters are added, reaching zero when parameters equal data points. Use χ² with remaining degrees of freedom or held-out data."}
+];
+const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');let cur=0;
+C.forEach((c,i)=>{const b=document.createElement('button');b.role='tab';b.textContent=c.t;b.onclick=()=>show(i);tabs.appendChild(b)});
+function show(i){cur=i;const c=C[i];
+[...tabs.children].forEach((b,j)=>b.setAttribute('aria-selected',j===i));
+panel.innerHTML=`<h2>${c.t}</h2><p class="tag">${c.g}</p><ul>${c.pts.map(x=>`<li>${x}</li>`).join('')}</ul><div class="rule">${c.r}</div><details><summary>${c.q}</summary><p>${c.a}</p></details><div class="nxt"><button ${i?'':'disabled style="opacity:.4"'} onclick="show(${i-1})">Previous</button><button ${i<9?'':'disabled style="opacity:.4"'} onclick="show(${i+1})">Next</button></div>`}
+show(0);
+const n=document.getElementById('n'),p=document.getElementById('p'),svg=document.getElementById('plot');
+function draw(){const N=+n.value,P=p.value/100,mu=N*P,sg=Math.sqrt(N*P*(1-P));
+document.getElementById('nv').textContent=N;document.getElementById('pv').textContent=P.toFixed(2);
+const pm=[];let lp=N*Math.log(1-P);pm[0]=Math.exp(lp);for(let r=1;r<=N;r++){lp+=Math.log((N-r+1)/r)+Math.log(P/(1-P));pm[r]=Math.exp(lp)}
+const gp=x=>Math.exp(-0.5*((x-mu)/sg)**2)/(sg*Math.sqrt(2*Math.PI));
+const lo=Math.max(0,Math.floor(mu-5*sg)),hi=Math.min(N,Math.ceil(mu+5*sg));
+let mx=0;for(let r=lo;r<=hi;r++)mx=Math.max(mx,pm[r],gp(r));
+const W=640,H=200,m=24,bw=(W-2*m)/(hi-lo+1),y=v=>H-20-(v/mx)*(H-40);
+let s='';for(let r=lo;r<=hi;r++)s+=`<rect x="${m+(r-lo)*bw+1}" y="${y(pm[r])}" width="${Math.max(bw-2,1)}" height="${H-20-y(pm[r])}" fill="var(--acc)" opacity=".55"/>`;
+let d='';for(let r=lo;r<=hi;r++){d+=(r==lo?'M':'L')+(m+(r-lo+.5)*bw)+' '+y(gp(r))}
+s+=`<path d="${d}" fill="none" stroke="var(--hi)" stroke-width="2.5"/><line x1="${m}" x2="${W-m}" y1="${H-20}" y2="${H-20}" stroke="var(--mute)"/>`;
+s+=`<text x="${m}" y="${H-4}" font-size="12" fill="var(--mute)">${lo}</text><text x="${W-m}" y="${H-4}" font-size="12" text-anchor="end" fill="var(--mute)">${hi}</text>`;
+svg.innerHTML=s;
+document.getElementById('read').textContent=`mean np = ${mu.toFixed(1)}, σ = ${sg.toFixed(2)}`+(P<=.05&&N>=50?' · rare events, close to Poisson (variance ≈ mean)':'')+(sg<1.5?' · too narrow for a good Gaussian match':'')}
+n.oninput=p.oninput=draw;draw();
+</script>
+</body>
+</html>
